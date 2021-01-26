@@ -153,7 +153,7 @@ server <- function(input, output) {
         par(mar=c(0.5,0.5,0.5,0.5))
         plot(0,0,xlim=c(0,1),ylim=c(0,1),col=0,
              yaxt="n",xaxt="n",xlab="",ylab="",bty="n")
-        points(coords[1:input$points,1],coords[1:input$points,2],pch=20, cex=1,col="blue")  
+        points(coords[1:input$points,1],coords[1:input$points,2],pch=20, cex=0.5,col="blue")  
         points(vertices[,2],vertices[,3],pch=20,cex=2,col="red")
         
     })
