@@ -8,7 +8,8 @@
 #
 
 library(shiny)
-
+library(shinyBS)
+library(shape)
 
 ## UI SIDE
 ui <- fluidPage(
@@ -16,7 +17,7 @@ ui <- fluidPage(
     # Application title
     navbarPage("Chaos Game",
                 tabsetPanel(
-                   tabPanel("Initial Sequence",
+                   tabPanel("1 - 100 Sequence",
                             sidebarLayout(
                                 position = "right",
                                 sidebarPanel( 
@@ -25,13 +26,13 @@ ui <- fluidPage(
                                         'Square' = 'square',
                                         'Pentagon' = 'pentagon'
                                     )),
-                                    sliderInput("points",
+                                    sliderInput("init",
                                                 "Number of points:",
                                                 min = 1,
                                                 max = 100,
                                                 value = 1,
                                                 step = 1,
-                                                animate=animationOptions(interval = 400)
+                                                animate=animationOptions(interval = 1000)
                                     ),
                                     sliderInput("fraction",
                                                 "Distance between points:",
@@ -53,7 +54,7 @@ ui <- fluidPage(
                                     )
                                 )
                             )),
-                   tabPanel("Mid Sequence",
+                   tabPanel("100 - 1000 Sequence",
                             sidebarLayout(
                                 position = "right",
                                 sidebarPanel( 
@@ -62,12 +63,12 @@ ui <- fluidPage(
                                         'Square' = 'square',
                                         'Pentagon' = 'pentagon'
                                     )),
-                                    sliderInput("points",
+                                    sliderInput("mid",
                                                 "Number of points:",
                                                 min = 100,
-                                                max = 5000,
+                                                max = 1000,
                                                 value = 100,
-                                                step = 25,
+                                                step = 10,
                                                 animate=animationOptions(interval = 400)
                                     ),
                                     sliderInput("fraction",
@@ -90,7 +91,7 @@ ui <- fluidPage(
                                     )
                                 )
                             )),
-                   tabPanel("Complete Sequence",
+                   tabPanel("1000 - 50000 Sequence",
                             sidebarLayout(
                                 position = "right",
                                 sidebarPanel( 
@@ -99,11 +100,11 @@ ui <- fluidPage(
                                         'Square' = 'square',
                                         'Pentagon' = 'pentagon'
                                     )),
-                                    sliderInput("points",
+                                    sliderInput("complete",
                                                 "Number of points:",
-                                                min = 5000,
+                                                min = 1000,
                                                 max = 50000,
-                                                value = 5000,
+                                                value = 1000,
                                                 step = 1000,
                                                 animate=animationOptions(interval = 400)
                                     ),
@@ -268,7 +269,7 @@ generate.pentagon <- function (dist, consec, clock) {
 }
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-
+    
     data.list <- reactive({
         if (input$shape == "triangle") {
             return (generate.triangle(input$fraction * (input$reset >= 0), input$consecdifferent, input$clockwisedifferent ))
@@ -280,15 +281,28 @@ server <- function(input, output) {
             return (generate.pentagon(input$fraction * (input$reset >= 0), input$consecdifferent, input$clockwisedifferent ))
         }
     })
+#Initial sequence
     
     output$chaosGame1 <- renderPlot ({
         vertices  <- data.list()[[1]]
         rvertices <- data.list()[[2]]
         coords    <- data.list()[[3]]
+        
+        #Initial triangle
         par(mar=c(0.5,0.5,0.5,0.5))
         plot(0,0,xlim=c(0,1),ylim=c(0,1),col=0,
              yaxt="n",xaxt="n",xlab="",ylab="",bty="n")
-        points(coords[1:input$points,1],coords[1:input$points,2],pch=20, cex=0.4,col="black")  
+        points(coords[1:input$init-1,1],coords[1:input$init-1,2],pch=20,cex=1,col="blue")  
+        
+        
+        x0 <- coords[input$init-1,1]
+        y0 <- coords[input$init-1,2]
+        x1 <- coords[input$init,1]
+        y1 <- coords[input$init,2]
+        
+        Arrows((.6*x0+.4*x1),(.6*y0+.4*y1),(.4*x0+.6*x1),(.4*y0+.6*y1),col="blue",lwd=2)
+        
+        
         points(vertices[,2],vertices[,3],pch=20,cex=2,col="red")
         
     })
@@ -299,7 +313,7 @@ server <- function(input, output) {
         par(mar=c(0.5,0.5,0.5,0.5))
         plot(0,0,xlim=c(0,1),ylim=c(0,1),col=0,
              yaxt="n",xaxt="n",xlab="",ylab="",bty="n")
-        points(coords[1:input$points,1],coords[1:input$points,2],pch=20, cex=0.4,col="black")  
+        points(coords[1:input$mid,1],coords[1:input$mid,2],pch=20, cex=0.4,col="black")  
         points(vertices[,2],vertices[,3],pch=20,cex=2,col="red")
         
     })
@@ -310,7 +324,7 @@ server <- function(input, output) {
         par(mar=c(0.5,0.5,0.5,0.5))
         plot(0,0,xlim=c(0,1),ylim=c(0,1),col=0,
              yaxt="n",xaxt="n",xlab="",ylab="",bty="n")
-        points(coords[1:input$points,1],coords[1:input$points,2],pch=20, cex=0.4,col="black")  
+        points(coords[1:input$complete,1],coords[1:input$complete,2],pch=20, cex=0.4,col="black")  
         points(vertices[,2],vertices[,3],pch=20,cex=2,col="red")
         
     })
