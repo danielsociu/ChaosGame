@@ -8,129 +8,85 @@
 #
 
 library(shiny)
-library(shinyBS)
 library(shape)
 
 ## UI SIDE
 ui <- fluidPage(
     
     # Application title
-    navbarPage("Chaos Game",
-                tabsetPanel(
-                   tabPanel("1 - 100 Sequence",
-                            sidebarLayout(
-                                position = "right",
-                                sidebarPanel( 
-                                    selectizeInput('shape', label = "Shape", choices = c(
-                                        'Triangle' = 'triangle',
-                                        'Square' = 'square',
-                                        'Pentagon' = 'pentagon'
-                                    )),
-                                    sliderInput("init",
-                                                "Number of points:",
-                                                min = 1,
-                                                max = 100,
-                                                value = 1,
-                                                step = 1,
-                                                animate=animationOptions(interval = 1000)
-                                    ),
-                                    sliderInput("fraction",
-                                                "Distance between points:",
-                                                min = 0.01,
-                                                max = 0.99,
-                                                value = 0.5),
-                                    actionButton("reset", label = "Reset"),
-                                    checkboxInput("consecdifferent", "Consecutives are different", FALSE),
-                                    checkboxInput("clockwisedifferent", "Clockwise are different", FALSE)
-                                ),
-                                
-                                # Show a plot of the generated distribution
-                                mainPanel( 
-                                    # textOutput("points.number.output"),
-                                    # textOutput("points.fraction.output"),
-                                    div(
-                                        plotOutput("chaosGame1", width = "500px", height = "500px")
-                                        
-                                    )
-                                )
-                            )),
-                   tabPanel("100 - 1000 Sequence",
-                            sidebarLayout(
-                                position = "right",
-                                sidebarPanel( 
-                                    selectizeInput('shape', label = "Shape", choices = c(
-                                        'Triangle' = 'triangle',
-                                        'Square' = 'square',
-                                        'Pentagon' = 'pentagon'
-                                    )),
-                                    sliderInput("mid",
-                                                "Number of points:",
-                                                min = 100,
-                                                max = 1000,
-                                                value = 100,
-                                                step = 10,
-                                                animate=animationOptions(interval = 400)
-                                    ),
-                                    sliderInput("fraction",
-                                                "Distance between points:",
-                                                min = 0.01,
-                                                max = 0.99,
-                                                value = 0.5),
-                                    actionButton("reset", label = "Reset"),
-                                    checkboxInput("consecdifferent", "Consecutives are different", FALSE),
-                                    checkboxInput("clockwisedifferent", "Clockwise are different", FALSE)
-                                ),
-                                
-                                # Show a plot of the generated distribution
-                                mainPanel( 
-                                    # textOutput("points.number.output"),
-                                    # textOutput("points.fraction.output"),
-                                    div(
-                                        plotOutput("chaosGame2", width = "500px", height = "500px")
-                                        
-                                    )
-                                )
-                            )),
-                   tabPanel("1000 - 50000 Sequence",
-                            sidebarLayout(
-                                position = "right",
-                                sidebarPanel( 
-                                    selectizeInput('shape', label = "Shape", choices = c(
-                                        'Triangle' = 'triangle',
-                                        'Square' = 'square',
-                                        'Pentagon' = 'pentagon'
-                                    )),
-                                    sliderInput("complete",
-                                                "Number of points:",
-                                                min = 1000,
-                                                max = 50000,
-                                                value = 1000,
-                                                step = 1000,
-                                                animate=animationOptions(interval = 400)
-                                    ),
-                                    sliderInput("fraction",
-                                                "Distance between points:",
-                                                min = 0.01,
-                                                max = 0.99,
-                                                value = 0.5),
-                                    actionButton("reset", label = "Reset"),
-                                    checkboxInput("consecdifferent", "Consecutives are different", FALSE),
-                                    checkboxInput("clockwisedifferent", "Clockwise are different", FALSE)
-                                ),
-                                
-                                # Show a plot of the generated distribution
-                                mainPanel( 
-                                    # textOutput("points.number.output"),
-                                    # textOutput("points.fraction.output"),
-                                    div(
-                                        plotOutput("chaosGame3", width = "500px", height = "500px")
-                                        
-                                    )
-                                )
-                            ))
-               )),
-    
-    
+    # navbarPage("Chaos Game",
+    #)
+    titlePanel("Chaos Game"),
+    sidebarLayout(
+        position = "right",
+        sidebarPanel( 
+            selectizeInput('shape', label = "Shape", choices = c(
+                'Triangle' = 'triangle',
+                'Square' = 'square',
+                'Pentagon' = 'pentagon'
+            )),
+            conditionalPanel(
+                condition = "input.tabselected==1",
+                sliderInput("init",
+                    "Number of points:",
+                    min = 1,
+                    max = 100,
+                    value = 1,
+                    step = 1,
+                    animate=animationOptions(interval = 700)
+                )
+            ),
+            conditionalPanel(
+                condition = "input.tabselected==2",
+                sliderInput("mid",
+                    "Number of points:",
+                    min = 100,
+                    max = 1000,
+                    value = 100,
+                    step = 20,
+                    animate=animationOptions(interval = 350)
+                )
+            ),
+            conditionalPanel(
+                condition = "input.tabselected==3",
+                sliderInput("complete",
+                    "Number of points:",
+                    min = 1000,
+                    max = 50000,
+                    value = 1000,
+                    step = 1000,
+                    animate=animationOptions(interval = 350)
+                )
+            ),
+            sliderInput("fraction",
+                        "Distance between points:",
+                        min = 0.01,
+                        max = 0.99,
+                        value = 0.5),
+            actionButton("reset", label = "Reset"),
+            checkboxInput("consecdifferent", "Consecutives are different", FALSE),
+            checkboxInput("clockwisedifferent", "Clockwise are different", FALSE)
+        ),
+        mainPanel( 
+            tabsetPanel(type = "tabs",id = "tabselected",
+               tabPanel("1 - 100 Sequence", value='1',
+                    div(
+                        plotOutput("chaosGame1", width = "500px", height = "500px")
+                    )
+                ),
+               tabPanel("100 - 1000 Sequence", value='2',
+                    div(
+                        plotOutput("chaosGame2", width = "500px", height = "500px")
+                    )
+                ),
+               tabPanel("1000 - 50000 Sequence", value='3',
+                    div(
+                        plotOutput("chaosGame3", width = "500px", height = "500px")
+                    )
+                )
+            )
+        )
+    )
 )
 
 ## SERVER SIDE
