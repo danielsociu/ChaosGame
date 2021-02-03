@@ -251,12 +251,12 @@ server <- function(input, output) {
         points(coords[1:input$init-1,1],coords[1:input$init-1,2],pch=20,cex=1,col="blue")  
         
         
-        x0 <- coords[input$init-1,1]
-        y0 <- coords[input$init-1,2]
-        x1 <- coords[input$init,1]
-        y1 <- coords[input$init,2]
+        x0 <- coords[input$init-2,1]
+        y0 <- coords[input$init-2,2]
+        x1 <- coords[input$init-1,1]
+        y1 <- coords[input$init-1,2]
         
-        Arrows((.6*x0+.4*x1),(.6*y0+.4*y1),(.4*x0+.6*x1),(.4*y0+.6*y1),col="blue",lwd=2)
+        Arrows((.6*x0+.4*x1),(.6*y0+.4*y1),(.4*x0+.6*x1),(.4*y0+.6*y1),col="blue",lwd=3)
         
         
         points(vertices[,2],vertices[,3],pch=20,cex=2,col="red")
